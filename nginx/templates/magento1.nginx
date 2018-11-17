@@ -1,0 +1,27 @@
+access_log  /var/log/nginx/access.log;#  main if=$writelog;
+error_log   /var/log/nginx/error.log  error;
+
+index index.php;
+
+location ~ ^/(app|downloader|dev|includes|pkginfo|var|errors/local.xml)/ { deny all; }
+
+location ~* \.(ico|jpe?g|png|gif|svg|js|css|swf|eot|ttf|otf|woff|woff2)$ {
+    expires max;
+    log_not_found off;
+    access_log off;
+}
+
+location =/js/index.php/x.js {
+    rewrite ^(.*\.php)/ $1 last;
+}
+
+location / { try_files $uri $uri/ $is_args$args; }
+
+## Execute PHP scripts
+location ~ \.php$ {
+    fastcgi_pass   $FASTCGI_PASS;
+    fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_param  MAGE_RUN_CODE $MAGE_RUN_CODE;
+    fastcgi_param  MAGE_RUN_TYPE $MAGE_RUN_TYPE;
+    include fastcgi_params;
+}
