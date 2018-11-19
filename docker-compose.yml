@@ -3,6 +3,9 @@ services:
     nginx:
         image: sproutstack/nginx
         container_name: ss_nginx
+        ports:
+            - "80:80"
+            - "443:443"
         volumes:
             - ./workspace:/workspace
             - ./logs/nginx:/var/log/nginx/
@@ -11,14 +14,25 @@ services:
             - ./nginx/nginx.conf:/etc/nginx/nginx.conf
             - ./nginx/ports.nginx:/etc/nginx/ports.nginx
             - ./nginx/fastcgi_params:/etc/nginx/fastcgi_params
-        network_mode: "host"
+        networks:
+            - server
+        depends_on:
+            - phpfpm56
+            - phpfpm70
+            - phpfpm71
+            - phpfpm72
     varnish:
         image: sproutstack/varnish
         container_name: ss_varnish
-        network_mode: "host"
+        ports:
+            - "8888:8888"
         volumes:
             - ./varnish/default.vcl:/etc/varnish/default.vcl
             - ./logs/varnish:/var/log/varnish
+        networks:
+            - server
+        depends_on:
+            - nginx
     phpfpm56:
         image: sproutstack/phpfpm:5.6
         container_name: ss_phpfpm5.6
@@ -27,7 +41,9 @@ services:
             - ./logs/phpfpm56:/var/log/php-fpm
             - ./php/5.6/www.conf:/usr/local/etc/php-fpm.d/www.conf
             - ./php/5.6/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
-        network_mode: "host"
+        networks:
+            - server
+            - database
     phpfpm70:
         image: sproutstack/phpfpm:7.0
         container_name: ss_phpfpm7.0
@@ -36,7 +52,9 @@ services:
             - ./logs/phpfpm70:/var/log/php-fpm
             - ./php/7.0/www.conf:/usr/local/etc/php-fpm.d/www.conf
             - ./php/7.0/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
-        network_mode: "host"
+        networks:
+            - server
+            - database
     phpfpm71:
         image: sproutstack/phpfpm:7.1
         container_name: ss_phpfpm7.1
@@ -45,7 +63,9 @@ services:
             - ./logs/phpfpm71:/var/log/php-fpm
             - ./php/7.1/www.conf:/usr/local/etc/php-fpm.d/www.conf
             - ./php/7.1/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
-        network_mode: "host"
+        networks:
+            - server
+            - database
     phpfpm72:
         image: sproutstack/phpfpm:7.2
         container_name: ss_phpfpm7.2
@@ -54,7 +74,9 @@ services:
             - ./logs/phpfpm72:/var/log/php-fpm
             - ./php/7.2/www.conf:/usr/local/etc/php-fpm.d/www.conf
             - ./php/7.2/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
-        network_mode: "host"
+        networks:
+            - server
+            - database
     mysql:
         image: mysql:5.7
         container_name: ss_mysql
@@ -64,11 +86,15 @@ services:
             - MYSQL_ROOT_PASSWORD=root
         volumes:
             - mysql:/var/lib/mysql
+        networks:
+            - database
     redis:
         image: redis:alpine
         container_name: ss_redis
         ports:
             - "6379:6379"
+        networks:
+            - database
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
         container_name: ss_phpmyadmin
@@ -76,6 +102,8 @@ services:
             - 8033:80
         environment:
             PMA_HOST: mysql
+        networks:
+            - database
     mailhog:
         image: mailhog/mailhog
         container_name: ss_mailhog
@@ -84,3 +112,6 @@ services:
             - "8025:8025"
 volumes:
     mysql:
+networks:
+    server:
+    database:

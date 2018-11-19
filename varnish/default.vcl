@@ -14,7 +14,7 @@ probe app-probe {
   .threshold = 3;
 }
 backend app-node0 {
-    .host = "127.0.0.1";
+    .host = "nginx";
     .port = "80";
     .probe = app-probe;
 }
