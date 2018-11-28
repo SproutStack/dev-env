@@ -5,12 +5,22 @@ index index.php;
 
 location ~ ^/(app|downloader|dev|includes|pkginfo|var|errors/local.xml)/ { deny all; }
 
-location ~* \.(ico|jpe?g|png|gif|svg|js|css|swf|eot|ttf|otf|woff|woff2)$ {
-    expires max;
+location ~* \.(ico|svg|js|map|css|swf|eot|ttf|otf|woff|woff2)$ {
+    try_files $uri $uri/ =404;
+    expires 300s;
     log_not_found off;
     access_log off;
 }
-
+location ~* \.(jpe?g|png|gif)$ {
+    try_files $uri $uri/ /ss_404.jpg;
+    expires 300s;
+    access_log off;
+    log_not_found off;
+    location ~* ^/ss_404.jpg$ {
+        root /usr/share/nginx/html;
+        try_files /404.jpg =404;
+    }
+}
 location =/js/index.php/x.js {
     rewrite ^(.*\.php)/ $1 last;
 }
