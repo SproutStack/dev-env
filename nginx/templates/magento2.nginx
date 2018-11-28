@@ -17,7 +17,7 @@ location ~* ^/setup($|/) {
         fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
         include        fastcgi_params;
     }
-
+    # Deny everything but index.php
     location ~ ^/setup/(?!pub/). {
         deny all;
     }
@@ -53,25 +53,21 @@ location ~* ^/update($|/) {
 location / { try_files $uri $uri/ /index.php$is_args$args; }
 
 location /pub/ {
-    location ~ ^/pub/media/(downloadable|customer|import|theme_customization/.*\.xml) {
-        deny all;
-    }
     alias $MAGE_ROOT/pub/;
     add_header X-Frame-Options "SAMEORIGIN";
 }
 
 location /static/ {
-    expires max;
+    expires 300s;
 
     # Remove signature of the static files that is used to overcome the browser cache
     location ~ ^/static/version {
         rewrite ^/static/(version\d*/)?(.*)$ /static/$2 last;
     }
-
     location ~* \.(ico|jpg|jpeg|png|gif|svg|js|css|swf|eot|ttf|otf|woff|woff2)$ {
         add_header Cache-Control "public";
         add_header X-Frame-Options "SAMEORIGIN";
-        expires +1y;
+        expires 300s;
 
         if (!-f $request_filename) {
             rewrite ^/static/(version\d*/)?(.*)$ /static.php?resource=$2 last;
@@ -93,20 +89,20 @@ location /static/ {
 }
 
 location /media/ {
-    
     try_files $uri $uri/ /get.php?$args;
+    access_log off;
+    log_not_found off;
 
     location ~ ^/media/theme_customization/.*\.xml {
         deny all;
     }
-
-    location ~* \.(ico|jpg|jpeg|png|gif|svg|js|css|swf|eot|ttf|otf|woff|woff2)$ {
-        add_header Cache-Control "public";
+    location ~* \.(jpg|jpeg|png|gif)$ {
+        add_header Cache-Control "no-store";
         add_header X-Frame-Options "SAMEORIGIN";
-        expires +1y;
-        try_files $uri $uri/ /get.php?$args;
+        expires off;
+        try_files $uri $uri/ /ss_404.jpg;
     }
-    location ~* \.(zip|gz|gzip|bz2|csv|xml)$ {
+    location ~* \.(zip|gz|gzip|bz2|csv|xml|ico|svg|js|css|swf|eot|ttf|otf|woff|woff2)$ {
         add_header Cache-Control "no-store";
         add_header X-Frame-Options "SAMEORIGIN";
         expires    off;
@@ -115,39 +111,12 @@ location /media/ {
     add_header X-Frame-Options "SAMEORIGIN";
 }
 
-location /pub/media/ {
-    
-    try_files $uri $uri/ /get.php?$args;
-
-    location ~ ^/media/theme_customization/.*\.xml {
-        deny all;
-    }
-
-    location ~* \.(ico|jpg|jpeg|png|gif|svg|js|css|swf|eot|ttf|otf|woff|woff2)$ {
-        add_header Cache-Control "public";
-        add_header X-Frame-Options "SAMEORIGIN";
-        expires +1y;
-	    try_files $uri $uri/ /get.php?$args;
-    }
-    location ~* \.(zip|gz|gzip|bz2|csv|xml)$ {
-        add_header Cache-Control "no-store";
-        add_header X-Frame-Options "SAMEORIGIN";
-        expires    off;
-        try_files $uri $uri/ /get.php?$args;
-    }
-    add_header X-Frame-Options "SAMEORIGIN";
-}
-
-location /media/customer/ {
-    deny all;
-}
-
-location /media/downloadable/ {
-    deny all;
-}
-
-location /media/import/ {
-    deny all;
+location /ss_404.jpg {
+    root /usr/share/nginx/html;
+    expires 300s;
+    access_log off;
+    log_not_found off;
+    try_files 404.jpg =404;
 }
 
 # PHP entry point for main application
@@ -184,6 +153,4 @@ gzip_types
 gzip_vary on;
 
 # Banned locations (only reached if the earlier PHP entry point regexes don't match)
-location ~* (\.php$|\.htaccess$|\.git) {
-    deny all;
-}
+location ~* /\. { deny all; }

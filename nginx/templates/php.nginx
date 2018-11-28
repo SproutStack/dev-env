@@ -8,10 +8,21 @@ location /     {
     expires max;
 }
 
-location ~* \.(ico|jpg|jpeg|png|gif|svg|js|css|swf|eot|ttf|otf|woff|woff2)$ {
-    expires max;
-    log_not_found off;
+location ~* \.(ico|svg|js|map|css|swf|eot|ttf|otf|woff|woff2)$ {
+    try_files $uri $uri/ =404;
+    expires 300s;
     access_log off;
+    log_not_found off;
+}
+location ~* \.(jpe?g|png|gif)$ {
+    try_files $uri $uri/ /ss_404.jpg;
+    expires 300s;
+    access_log off;
+    log_not_found off;
+    location ~* ^/ss_404.jpg$ {
+        root /usr/share/nginx/html;
+        try_files /404.jpg =404;
+    }
 }
 
 ## Execute PHP scripts
