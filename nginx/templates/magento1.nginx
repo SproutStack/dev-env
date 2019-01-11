@@ -25,7 +25,7 @@ location =/js/index.php/x.js {
     rewrite ^(.*\.php)/ $1 last;
 }
 
-location / { try_files $uri $uri/ $is_args$args; }
+location / { try_files $uri $uri/ /index.php$is_args$args; }
 
 ## Execute PHP scripts
 location ~ \.php$ {
