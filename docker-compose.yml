@@ -25,6 +25,8 @@ services:
         image: sproutstack/phpfpm:5.6
         container_name: ss_phpfpm5.6
         user: '${USERID}:${GROUPID}'
+        cap_add:
+            - SYS_PTRACE
         volumes:
             - ./workspace:/workspace
             - ./logs/phpfpm56:/var/log/php-fpm
@@ -37,6 +39,8 @@ services:
         image: sproutstack/phpfpm:7.0
         container_name: ss_phpfpm7.0
         user: '${USERID}:${GROUPID}'
+        cap_add:
+            - SYS_PTRACE
         volumes:
             - ./workspace:/workspace
             - ./logs/phpfpm70:/var/log/php-fpm
@@ -49,6 +53,8 @@ services:
         image: sproutstack/phpfpm:7.1
         container_name: ss_phpfpm7.1
         user: '${USERID}:${GROUPID}'
+        cap_add:
+            - SYS_PTRACE
         volumes:
             - ./workspace:/workspace
             - ./logs/phpfpm71:/var/log/php-fpm
@@ -61,6 +67,8 @@ services:
         image: sproutstack/phpfpm:7.2
         container_name: ss_phpfpm7.2
         user: '${USERID}:${GROUPID}'
+        cap_add:
+            - SYS_PTRACE
         volumes:
             - ./workspace:/workspace
             - ./logs/phpfpm72:/var/log/php-fpm
