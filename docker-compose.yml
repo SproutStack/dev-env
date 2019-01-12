@@ -1,4 +1,4 @@
-version: '2'
+version: '2.1'
 services:
     nginx:
         image: sproutstack/nginx
@@ -24,6 +24,9 @@ services:
     phpfpm56:
         image: sproutstack/phpfpm:5.6
         container_name: ss_phpfpm5.6
+        user: '${USERID:-1000}:${GROUPID:-1000}'
+        cap_add:
+            - SYS_PTRACE
         volumes:
             - ./workspace:/workspace
             - ./logs/phpfpm56:/var/log/php-fpm
@@ -35,6 +38,9 @@ services:
     phpfpm70:
         image: sproutstack/phpfpm:7.0
         container_name: ss_phpfpm7.0
+        user: '${USERID:-1000}:${GROUPID:-1000}'
+        cap_add:
+            - SYS_PTRACE
         volumes:
             - ./workspace:/workspace
             - ./logs/phpfpm70:/var/log/php-fpm
@@ -46,6 +52,9 @@ services:
     phpfpm71:
         image: sproutstack/phpfpm:7.1
         container_name: ss_phpfpm7.1
+        user: '${USERID:-1000}:${GROUPID:-1000}'
+        cap_add:
+            - SYS_PTRACE
         volumes:
             - ./workspace:/workspace
             - ./logs/phpfpm71:/var/log/php-fpm
@@ -57,6 +66,9 @@ services:
     phpfpm72:
         image: sproutstack/phpfpm:7.2
         container_name: ss_phpfpm7.2
+        user: '${USERID:-1000}:${GROUPID:-1000}'
+        cap_add:
+            - SYS_PTRACE
         volumes:
             - ./workspace:/workspace
             - ./logs/phpfpm72:/var/log/php-fpm
@@ -71,7 +83,7 @@ services:
         ports:
             - "3306:3306"
         environment:
-            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-root}
         volumes:
             - mysql:/var/lib/mysql
     redis:
