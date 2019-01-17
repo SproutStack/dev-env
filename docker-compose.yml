@@ -3,6 +3,8 @@ services:
     nginx:
         image: sproutstack/nginx
         container_name: ss_nginx
+        environment:
+            - USERID=${USERID:-1000}
         volumes:
             - ./workspace:/workspace
             - ./logs/nginx:/var/log/nginx/
@@ -11,9 +13,8 @@ services:
             - ./nginx/nginx.conf:/etc/nginx/nginx.conf
             - ./nginx/ports.nginx:/etc/nginx/ports.nginx
             - ./nginx/fastcgi_params:/etc/nginx/fastcgi_params
-            - /etc/passwd:/etc/passwd:ro
-            - /etc/group:/etc/group:ro
         network_mode: "host"
+        command: /bin/ash -c "adduser -D -H -u $USERID www-data && exec nginx -g 'daemon off;'"
     varnish:
         image: sproutstack/varnish
         container_name: ss_varnish
@@ -32,8 +33,6 @@ services:
             - ./logs/phpfpm56:/var/log/php-fpm
             - ./php/5.6/www.conf:/usr/local/etc/php-fpm.d/www.conf
             - ./php/5.6/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
-            - /etc/passwd:/etc/passwd:ro
-            - /etc/group:/etc/group:ro
         network_mode: "host"
     phpfpm70:
         image: sproutstack/phpfpm:7.0
@@ -46,8 +45,6 @@ services:
             - ./logs/phpfpm70:/var/log/php-fpm
             - ./php/7.0/www.conf:/usr/local/etc/php-fpm.d/www.conf
             - ./php/7.0/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
-            - /etc/passwd:/etc/passwd:ro
-            - /etc/group:/etc/group:ro
         network_mode: "host"
     phpfpm71:
         image: sproutstack/phpfpm:7.1
@@ -60,8 +57,6 @@ services:
             - ./logs/phpfpm71:/var/log/php-fpm
             - ./php/7.1/www.conf:/usr/local/etc/php-fpm.d/www.conf
             - ./php/7.1/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
-            - /etc/passwd:/etc/passwd:ro
-            - /etc/group:/etc/group:ro
         network_mode: "host"
     phpfpm72:
         image: sproutstack/phpfpm:7.2
@@ -74,8 +69,6 @@ services:
             - ./logs/phpfpm72:/var/log/php-fpm
             - ./php/7.2/www.conf:/usr/local/etc/php-fpm.d/www.conf
             - ./php/7.2/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
-            - /etc/passwd:/etc/passwd:ro
-            - /etc/group:/etc/group:ro
         network_mode: "host"
     mysql:
         image: mysql:5.7
