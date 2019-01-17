@@ -3,8 +3,6 @@ services:
     nginx:
         image: sproutstack/nginx
         container_name: ss_nginx
-        environment:
-            - USERID=${USERID:-1000}
         volumes:
             - ./workspace:/workspace
             - ./logs/nginx:/var/log/nginx/
@@ -14,7 +12,7 @@ services:
             - ./nginx/ports.nginx:/etc/nginx/ports.nginx
             - ./nginx/fastcgi_params:/etc/nginx/fastcgi_params
         network_mode: "host"
-        command: /bin/ash -c "(adduser -D -H -u $USERID www-data || true) && exec nginx -g 'daemon off;'"
+        command: /bin/ash -c "(adduser -D -H -u ${USERID:-1000} www-data || true) >/dev/null && exec nginx -g 'daemon off;'"
     varnish:
         image: sproutstack/varnish
         container_name: ss_varnish
