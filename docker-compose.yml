@@ -14,7 +14,7 @@ services:
             - ./nginx/ports.nginx:/etc/nginx/ports.nginx
             - ./nginx/fastcgi_params:/etc/nginx/fastcgi_params
         network_mode: "host"
-        command: /bin/ash -c "adduser -D -H -u $USERID www-data && exec nginx -g 'daemon off;'"
+        command: /bin/ash -c "(adduser -D -H -u $USERID www-data || true) && exec nginx -g 'daemon off;'"
     varnish:
         image: sproutstack/varnish
         container_name: ss_varnish
