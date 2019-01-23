@@ -70,6 +70,18 @@ services:
             - ./php/7.2/www.conf:/usr/local/etc/php-fpm.d/www.conf
             - ./php/7.2/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
         network_mode: "host"
+    phpfpm73:
+        image: sproutstack/phpfpm:7.3
+        container_name: ss_phpfpm7.3
+        user: '${USERID:-1000}:${GROUPID:-1000}'
+        cap_add:
+            - SYS_PTRACE
+        volumes:
+            - ./workspace:/workspace
+            - ./logs/phpfpm73:/var/log/php-fpm
+            - ./php/7.3/www.conf:/usr/local/etc/php-fpm.d/www.conf
+            - ./php/7.3/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+        network_mode: "host"
     mysql:
         image: mysql:5.7
         container_name: ss_mysql
