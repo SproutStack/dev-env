@@ -1,0 +1,73 @@
+#!/bin/bash
+source .scripts/deps/color.sh
+set -o errexit -o pipefail -o noclobber -o nounset
+
+# Test for the correct getopt version - expect return code 4
+! getopt --test > /dev/null
+if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
+	echo 'I’m sorry, `getopt --test` failed in this environment.'
+	exit 1
+fi
+
+OPTIONS=hv
+LONGOPTS=help,verbose
+
+# Parse options via getopt
+! PARSED=$(getopt --options=$OPTIONS --longoptions=$LONGOPTS --name "$0" -- "$@")
+if [[ ${PIPESTATUS[0]} -ne 0 ]]; then
+	# e.g. return value is 1 then getopt has complained about wrong arguments to stdout
+	exit 2
+fi
+eval set -- "$PARSED"
+
+# Options loop
+help=n verbose=n outFile=-
+while true; do
+	case "$1" in
+		-h|--help|\?)
+			help=y
+			shift
+			;;
+		-v|--verbose)
+			v=y
+			shift
+			;;
+		-o|--output)
+			outFile="$2"
+			shift 2
+			;;
+		--)
+			shift
+			break
+			;;
+		*)
+			echo "General error"
+			exit 3
+			;;
+	esac
+done
+
+
+USAGE=$(cat <<-END
+${CYAN}USAGE: ./sproutstack [OPTIONS] [ARGS] ${RESET}
+	This is line one.
+	This is line two.
+	This is line three.
+END
+)
+
+if [[ $help = 'y' ]]; then
+	echo -e "$USAGE"
+	exit
+fi
+
+# Must be 1 argument
+if [[ $# -ne 1 ]]; then
+	echo -e "$0: ${RED}Please define a single argument${RESET}\n"
+	echo -e "$USAGE"
+	exit 4
+fi
+
+if [[ $1 = 'new-site' ]]; then
+	create-vhost;
+fi
