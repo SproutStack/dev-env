@@ -1,7 +1,7 @@
 access_log  /var/log/nginx/access.log;#  main if=$writelog;
 error_log   /var/log/nginx/error.log  error;
 
-index index.php;
+index index.html index.php;
 
 location ~ ^/(app|downloader|dev|includes|pkginfo|var|errors/local.xml)/ { deny all; }
 
@@ -25,7 +25,7 @@ location =/js/index.php/x.js {
     rewrite ^(.*\.php)/ $1 last;
 }
 
-location / { try_files $uri $uri/ $is_args$args; }
+location / { try_files $uri $uri/ /index.php$is_args$args; }
 
 ## Execute PHP scripts
 location ~ \.php$ {
