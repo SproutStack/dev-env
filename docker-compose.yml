@@ -106,6 +106,9 @@ services:
             - ./php/7.3/www.conf:/usr/local/etc/php-fpm.d/www.conf
             - ./php/7.3/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
             - /etc/passwd:/etc/passwd:ro
+        networks:
+            - server
+            - database
     mysql:
         image: mysql:5.7
         container_name: ss_mysql
