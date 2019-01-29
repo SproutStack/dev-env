@@ -45,6 +45,7 @@ services:
             - ./logs/phpfpm56:/var/log/php-fpm
             - ./php/5.6/www.conf:/usr/local/etc/php-fpm.d/www.conf
             - ./php/5.6/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+            - ./php/5.6/ssmtp.conf:/etc/ssmtp/ssmtp.conf
             - /etc/passwd:/etc/passwd:ro
         networks:
             - server
@@ -60,6 +61,7 @@ services:
             - ./logs/phpfpm70:/var/log/php-fpm
             - ./php/7.0/www.conf:/usr/local/etc/php-fpm.d/www.conf
             - ./php/7.0/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+            - ./php/7.0/ssmtp.conf:/etc/ssmtp/ssmtp.conf
             - /etc/passwd:/etc/passwd:ro
         networks:
             - server
@@ -75,6 +77,7 @@ services:
             - ./logs/phpfpm71:/var/log/php-fpm
             - ./php/7.1/www.conf:/usr/local/etc/php-fpm.d/www.conf
             - ./php/7.1/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+            - ./php/7.1/ssmtp.conf:/etc/ssmtp/ssmtp.conf
             - /etc/passwd:/etc/passwd:ro
         networks:
             - server
@@ -90,6 +93,7 @@ services:
             - ./logs/phpfpm72:/var/log/php-fpm
             - ./php/7.2/www.conf:/usr/local/etc/php-fpm.d/www.conf
             - ./php/7.2/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+            - ./php/7.2/ssmtp.conf:/etc/ssmtp/ssmtp.conf
             - /etc/passwd:/etc/passwd:ro
         networks:
             - server
@@ -105,6 +109,7 @@ services:
             - ./logs/phpfpm73:/var/log/php-fpm
             - ./php/7.3/www.conf:/usr/local/etc/php-fpm.d/www.conf
             - ./php/7.3/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+            - ./php/7.3/ssmtp.conf:/etc/ssmtp/ssmtp.conf
             - /etc/passwd:/etc/passwd:ro
         networks:
             - server
@@ -140,8 +145,9 @@ services:
         image: mailhog/mailhog
         container_name: ss_mailhog
         ports:
-            - "25:1025"
             - "8025:8025"
+        networks:
+            - server
 volumes:
     mysql:
 networks:
