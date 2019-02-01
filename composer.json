@@ -1,0 +1,10 @@
+{
+    "name": "SproutStack CLI",
+    "description": "SproutStack CLI",
+    "require": {
+        "symfony/console": "^4.2"
+    },
+    "autoload": {
+        "psr-4": {"App\\": "console/"}
+    }
+}
