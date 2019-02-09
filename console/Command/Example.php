@@ -26,6 +26,7 @@ class ExampleCommand extends Command
 
         $output->writeln(sprintf('Your example argument is: %s', $exampleArg));
 
+        $output->writeln("Current Dir:" . getcwd());
         return 0;
     }
 }
