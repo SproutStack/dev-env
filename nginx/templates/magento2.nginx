@@ -116,7 +116,7 @@ location /ss_404.jpg {
     expires 300s;
     access_log off;
     log_not_found off;
-    try_files 404.jpg =404;
+    try_files $uri /404.jpg =404;
 }
 
 # PHP entry point for main application
