@@ -35,7 +35,7 @@ services:
         depends_on:
             - nginx
     phpfpm56:
-        image: sproutstack/phpfpm:5.6
+        image: sproutstack/phpfpm:5.6${PHP_EXTENSION}
         container_name: ss_phpfpm5.6
         user: '${USERID:-1000}:${GROUPID:-1000}'
         cap_add:
@@ -51,7 +51,7 @@ services:
             - server
             - database
     phpfpm70:
-        image: sproutstack/phpfpm:7.0
+        image: sproutstack/phpfpm:7.0${PHP_EXTENSION}
         container_name: ss_phpfpm7.0
         user: '${USERID:-1000}:${GROUPID:-1000}'
         cap_add:
@@ -67,7 +67,7 @@ services:
             - server
             - database
     phpfpm71:
-        image: sproutstack/phpfpm:7.1
+        image: sproutstack/phpfpm:7.1${PHP_EXTENSION}
         container_name: ss_phpfpm7.1
         user: '${USERID:-1000}:${GROUPID:-1000}'
         cap_add:
@@ -83,7 +83,7 @@ services:
             - server
             - database
     phpfpm72:
-        image: sproutstack/phpfpm:7.2
+        image: sproutstack/phpfpm:7.2${PHP_EXTENSION}
         container_name: ss_phpfpm7.2
         user: '${USERID:-1000}:${GROUPID:-1000}'
         cap_add:
@@ -99,7 +99,7 @@ services:
             - server
             - database
     phpfpm73:
-        image: sproutstack/phpfpm:7.3
+        image: sproutstack/phpfpm:7.3${PHP_EXTENSION}
         container_name: ss_phpfpm7.3
         user: '${USERID:-1000}:${GROUPID:-1000}'
         cap_add:
