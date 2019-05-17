@@ -73,6 +73,10 @@ sub vcl_recv {
         return(pass);
     }
 
+    if (req.http.X-Blackfire-Query && client.ip ~ editors) {
+        return (pass);
+    }
+
     # Allow purging
     if (req.method == "PURGE") {
         if (!client.ip ~ purge) {

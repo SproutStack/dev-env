@@ -112,5 +112,8 @@ services:
         ports:
             - "25:1025"
             - "8025:8025"
+    blackfire:
+        image: blackfire/blackfire
+        container_name: ss_blackfire
 volumes:
     mysql:
