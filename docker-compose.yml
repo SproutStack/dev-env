@@ -113,7 +113,14 @@ services:
             - "25:1025"
             - "8025:8025"
     blackfire:
-        image: blackfire/blackfire
+        image: blackfire/blackfire:1.25.0
         container_name: ss_blackfire
+        volumes:
+            - "./php/blackfire-agent.ini:/etc/blackfire-agent.ini"
+        environment:
+            - BLACKFIRE_CONFIG=/etc/blackfire-agent.ini
+        env_file:
+            - .env
+        network_mode: "host"
 volumes:
     mysql:
